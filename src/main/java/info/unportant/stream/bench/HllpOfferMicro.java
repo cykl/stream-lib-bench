@@ -81,12 +81,14 @@ public class HllpOfferMicro {
 		return benchState.hll.offer(threadState.rand.nextLong());
 	}
 
+	// Fails with the default implementation (not thread safe) // Modified
 	@Threads(4)
 	@GenerateMicroBenchmark()
 	public boolean scalability4(ThreadState threadState, BenchmarkState benchState) {
 		return benchState.hll.offer(threadState.rand.nextLong());
 	}
-	
+
+	// Fails with the default implementation (not thread safe) // Modified
 	@Threads(0)
 	@GenerateMicroBenchmark()
 	public boolean scalabilityMax(ThreadState threadState, BenchmarkState benchState) {

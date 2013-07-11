@@ -85,6 +85,7 @@ public class HllpMergeMicro {
 		return evolving0(threadState, benchState);
 	}
 	
+	// Fails with the default implementation (not thread safe) // Modified
 	@Threads(4)
 	@GenerateMicroBenchmark
 	public ICardinality scalability4(ThreadState threadState, BenchmarkState benchState) 
@@ -92,6 +93,7 @@ public class HllpMergeMicro {
 		return evolving0(threadState, benchState);
 	}
 
+	// Fails with the default implementation (not thread safe) // Modified
 	@Threads(0)
 	@GenerateMicroBenchmark
 	public ICardinality scalabilityMax(ThreadState threadState, BenchmarkState benchState) 

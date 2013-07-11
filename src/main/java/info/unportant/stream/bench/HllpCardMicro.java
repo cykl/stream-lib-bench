@@ -75,12 +75,14 @@ public class HllpCardMicro {
 		return hllLarge.cardinality();
 	}
 
+	// Fails with the default implementation (not thread safe) // Modified
 	@Threads(4)
 	@GenerateMicroBenchmark()
 	public long scalability4() throws CardinalityMergeException {
 		return hllLarge.cardinality();
 	}
 
+	// Fails with the default implementation (not thread safe) // Modified
 	@Threads(0)
 	@GenerateMicroBenchmark()
 	public long scalabilityMax() throws CardinalityMergeException {
