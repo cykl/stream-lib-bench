@@ -58,9 +58,9 @@ import com.clearspring.analytics.stream.cardinality.ICardinality;
 @Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
 public class HllMergeMacro {
-	static final int ESTIMATOR_COUNT = 100_000;
+	static final int ESTIMATOR_COUNT = 20_000;
 	static final int FILE_SIZE = 1_000_000_000;
-	static final int MAX_CARD  = 40_000;
+	static final int MAX_CARD  = 80_000;
 	static final Random rand = new Random();
 
 	@State(Scope.Benchmark)
@@ -89,7 +89,7 @@ public class HllMergeMacro {
 	 * They must have the same expected precision to be fair.
 	 */
 	@GenerateMicroBenchmark
-	public ICardinality bandwithFixedCount(BenchmarkState benchmarkState) throws Exception {
+	public ICardinality mergeFixedCount(BenchmarkState benchmarkState) throws Exception {
 		return readFile(benchmarkState.fixedSizeFile, ESTIMATOR_COUNT);
 	}
 	
