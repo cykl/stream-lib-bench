@@ -18,7 +18,6 @@
  * limitations under the License.
  */
 
-
 package unportant.streamlibbench.hll.micro;
 
 import static info.unportant.stream.bench.HllUtils.*;
@@ -39,7 +38,7 @@ import org.openjdk.jmh.annotations.Warmup;
 import com.clearspring.analytics.stream.cardinality.${impl.className};
 
 /**
- * The goal of theses micro-benchmarks is to check how fast 
+ * The goal of theses micro-benchmarks is to check how fast
  * offer can be and to compare different implementations.
  *
  * It does not expect to exhibit real world performances since data
@@ -51,27 +50,27 @@ import com.clearspring.analytics.stream.cardinality.${impl.className};
 @Measurement(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
 public class ${impl.className}Offer {
 
-	@State(Scope.Benchmark)
-	public static class BenchmarkState {
-		final ${impl.className} hll = createEmpty${impl.className}();
-	}
-	
-	@State(Scope.Thread)
-	public static class ThreadState {
-		final Random rand = new Random();
-		final int nextInt() {
-			return rand.nextInt();
-		}
-	}
-	
-	@GenerateMicroBenchmark()
-	public boolean simpleHashed(ThreadState threadState, BenchmarkState benchState) {
-		return benchState.hll.offerHashed(threadState.rand.nextLong());
-	}
-	
-	@GenerateMicroBenchmark()
-	public boolean simple(ThreadState threadState, BenchmarkState benchState) {
-		return benchState.hll.offer(threadState.rand.nextInt());
-	}
+    @State(Scope.Benchmark)
+    public static class BenchmarkState {
+        final ${impl.className} hll = createEmpty${impl.className}();
+    }
+
+    @State(Scope.Thread)
+    public static class ThreadState {
+        final Random rand = new Random();
+        final int nextInt() {
+            return rand.nextInt();
+        }
+    }
+
+    @GenerateMicroBenchmark()
+    public boolean simpleHashed(ThreadState threadState, BenchmarkState benchState) {
+        return benchState.hll.offerHashed(threadState.rand.nextLong());
+    }
+
+    @GenerateMicroBenchmark()
+    public boolean simple(ThreadState threadState, BenchmarkState benchState) {
+        return benchState.hll.offer(threadState.rand.nextInt());
+    }
 }
 </#list>
