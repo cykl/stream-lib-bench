@@ -1,3 +1,7 @@
+<@pp.dropOutputFile />
+<#list HyperLogLogImplementations as impl>
+<@pp.changeOutputFile name=pp.pathTo(impl.className + "Cardinality.java") />
+
 /*
  * Copyright (C) 2013 Clément MATHIEU
  *
@@ -14,9 +18,9 @@
  * limitations under the License.
  */
 
-package info.unportant.stream.bench;
+package unportant.streamlibbench.hll.micro;
 
-import static info.unportant.stream.bench.HllUtils.*;
+import static info.unportant.stream.bench.HllUtils.create${impl.className};
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,18 +35,18 @@ import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 
 import com.clearspring.analytics.stream.cardinality.CardinalityMergeException;
-import com.clearspring.analytics.stream.cardinality.HyperLogLogPlus;
+import com.clearspring.analytics.stream.cardinality.${impl.className};
 
 /**
- * The goal of theses micro-benchmarks is to check how fast 
+ * The goal of theses micro-benchmarks is to check how fast
  * cardinality can be and to compare different implementations.
  *
  * It does not expect to exhibit real world performances since data
  * will always be in the CPU cache.
- * 
- * Several cardinalities are tested to check if the number of elements 
+ *
+ * Several cardinalities are tested to check if the number of elements
  * change the performance behavior and to be able to compare HLL to HLL++.
- * 
+ *
  * We also check the scalability of the cardinality operation.
  */
 @BenchmarkMode(Mode.Throughput)
@@ -50,15 +54,11 @@ import com.clearspring.analytics.stream.cardinality.HyperLogLogPlus;
 @OutputTimeUnit(TimeUnit.SECONDS)
 @Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
-public class HllpCardMicro {
+public class ${impl.className}Cardinality {
 
-	// FIXME: JMH does not yet support inheritance so this code is duplicated from the
-	// FIXME: HLL implementation. This should be refactored as soon as JMH evolve
-	// FIXME: Meanwhile take care to synchronize the HLL and HLL++ versions
-	
-	HyperLogLogPlus hllEmpty  = createHllp(0);         // Modified
-	HyperLogLogPlus hllMedium = createHllp(10_000);    // Modified
-	HyperLogLogPlus hllLarge  = createHllp(1_000_000); // Modified
+	${impl.className} hllEmpty  = create${impl.className}(0);
+	${impl.className} hllMedium = create${impl.className}(10_000);
+	${impl.className} hllLarge  = create${impl.className}(1_000_000);
 
 	@GenerateMicroBenchmark()
 	public long empty() throws CardinalityMergeException {
@@ -75,17 +75,16 @@ public class HllpCardMicro {
 		return hllLarge.cardinality();
 	}
 
-	// Fails with the default implementation (not thread safe) // Modified
 	@Threads(4)
 	@GenerateMicroBenchmark()
 	public long scalability4() throws CardinalityMergeException {
 		return hllLarge.cardinality();
 	}
 
-	// Fails with the default implementation (not thread safe) // Modified
 	@Threads(0)
 	@GenerateMicroBenchmark()
 	public long scalabilityMax() throws CardinalityMergeException {
 		return hllLarge.cardinality();
 	}
 }
+</#list>

@@ -13,22 +13,22 @@ public class HllUtils {
 	private  HllUtils() {
 	}
 	
-	public static HyperLogLog createEmptyHll() {
+	public static HyperLogLog createEmptyHyperLogLog() {
 		return new HyperLogLog(LOG2M);
 	}
 	
-	public static HyperLogLog createHll(int cardinality) {
-		HyperLogLog hll = createEmptyHll();
+	public static HyperLogLog createHyperLogLog(int cardinality) {
+		HyperLogLog hll = createEmptyHyperLogLog();
 		fill(hll, cardinality);
 		return hll;
 	}
 	
-	public static HyperLogLogPlus createEmptyHllp() {
+	public static HyperLogLogPlus createEmptyHyperLogLogPlus() {
 		return new HyperLogLogPlus(LOG2M, LOG2M);
 	}
 
-	public static HyperLogLogPlus createHllp(int cardinality) {
-		HyperLogLogPlus hllp = createEmptyHllp();
+	public static HyperLogLogPlus createHyperLogLogPlus(int cardinality) {
+		HyperLogLogPlus hllp = createEmptyHyperLogLogPlus();
 		fill(hllp, cardinality);
 		return hllp;
 	}

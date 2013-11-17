@@ -1,3 +1,7 @@
+<@pp.dropOutputFile />
+<#list HyperLogLogImplementations as impl>
+<@pp.changeOutputFile name=pp.pathTo(impl.className + "Offer.java") />
+
 /*
  * Copyright (C) 2013 Clément MATHIEU.
  *
@@ -14,9 +18,10 @@
  * limitations under the License.
  */
 
-package info.unportant.stream.bench;
 
-import static info.unportant.stream.bench.HllUtils.createEmptyHll;
+package unportant.streamlibbench.hll.micro;
+
+import static info.unportant.stream.bench.HllUtils.*;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +36,7 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 
-import com.clearspring.analytics.stream.cardinality.HyperLogLog;
+import com.clearspring.analytics.stream.cardinality.${impl.className};
 
 /**
  * The goal of theses micro-benchmarks is to check how fast 
@@ -49,11 +54,11 @@ import com.clearspring.analytics.stream.cardinality.HyperLogLog;
 @OutputTimeUnit(TimeUnit.SECONDS)
 @Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
-public class HllOfferMicro {
+public class ${impl.className}Offer {
 
 	@State(Scope.Benchmark)
 	public static class BenchmarkState {
-		final HyperLogLog hll = createEmptyHll();
+		final ${impl.className} hll = createEmpty${impl.className}();
 	}
 	
 	@State(Scope.Thread)
@@ -86,3 +91,4 @@ public class HllOfferMicro {
 		return benchState.hll.offer(threadState.rand.nextInt());
 	}
 }
+</#list>

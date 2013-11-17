@@ -1,0 +1,15 @@
+
+data: {
+    HyperLogLogImplementations: [
+        {
+            className: HyperLogLog
+        },
+        {
+            className: HyperLogLogPlus
+        }
+    ]
+}
+
+modes: [
+    execute("**/*.java")
+]

@@ -1,3 +1,7 @@
+<@pp.dropOutputFile />
+<#list HyperLogLogImplementations as impl>
+<@pp.changeOutputFile name=pp.pathTo(impl.className + "Merge.java") />
+
 /*
  * Copyright (C) 2013 Clément MATHIEU
  *
@@ -14,12 +18,9 @@
  * limitations under the License.
  */
 
-package info.unportant.stream.bench;
+package unportant.streamlibbench.hll.macro;
 
-import static info.unportant.stream.bench.HllUtils.byteArrayToInt;
-import static info.unportant.stream.bench.HllUtils.createEmptyHll;
-import static info.unportant.stream.bench.HllUtils.createHll;
-import static info.unportant.stream.bench.HllUtils.intToByteArray;
+import static info.unportant.stream.bench.HllUtils.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,7 +40,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
-import com.clearspring.analytics.stream.cardinality.HyperLogLog;
+import com.clearspring.analytics.stream.cardinality.${impl.className};
 import com.clearspring.analytics.stream.cardinality.ICardinality;
 
 /** Test how fast we can merge a stream of estimators.
@@ -57,7 +58,7 @@ import com.clearspring.analytics.stream.cardinality.ICardinality;
 @OutputTimeUnit(TimeUnit.SECONDS)
 @Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
-public class HllMergeMacro {
+public class ${impl.className}Merge {
 	static final int ESTIMATOR_COUNT = 20_000;
 	static final int FILE_SIZE = 1_000_000_000;
 	static final int MAX_CARD  = 80_000;
@@ -74,7 +75,7 @@ public class HllMergeMacro {
 			try (FileOutputStream fos = new FileOutputStream(fixedSizeFile)) {
 				int bytes = 0;
 				while (bytes < FILE_SIZE) {
-					byte [] buf = createHll(rand.nextInt(MAX_CARD)).getBytes();
+					byte [] buf = create${impl.className}(rand.nextInt(MAX_CARD)).getBytes();
 					int len = buf.length;
 					fos.write(intToByteArray(len));
 					fos.write(buf);
@@ -106,7 +107,7 @@ public class HllMergeMacro {
 	
 	@CompilerControl(CompilerControl.Mode.INLINE)
 	private ICardinality readFile(File file, int maxIterCount) throws Exception {
-		ICardinality agg = createEmptyHll();
+		ICardinality agg = createEmpty${impl.className}();
 		
 		try (FileInputStream fis = new FileInputStream(file)) {
 			byte [] size = new byte[4];
@@ -115,10 +116,11 @@ public class HllMergeMacro {
 				int len = byteArrayToInt(size);
 				byte [] buf = new byte[len];
 				fis.read(buf, 0, len);
-				agg = agg.merge(HyperLogLog.Builder.build(buf));
+				agg = agg.merge(${impl.className}.Builder.build(buf));
 			}
 		}
 		
 		return agg;
 	}
 }
+</#list>

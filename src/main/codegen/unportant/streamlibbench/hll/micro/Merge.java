@@ -1,3 +1,7 @@
+<@pp.dropOutputFile />
+<#list HyperLogLogImplementations as impl>
+<@pp.changeOutputFile name=pp.pathTo(impl.className + "Merge.java") />
+
 /*
  * Copyright (C) 2013 Clément MATHIEU
  *
@@ -13,7 +17,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package info.unportant.stream.bench;
+
+package unportant.streamlibbench.hll.micro;
 
 import static info.unportant.stream.bench.HllUtils.*;
 
@@ -54,12 +59,12 @@ import com.clearspring.analytics.stream.cardinality.ICardinality;
 @OutputTimeUnit(TimeUnit.SECONDS)
 @Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
-public class HllMergeMicro {
+public class ${impl.className}Merge {
 	
 	@State(Scope.Benchmark)
 	public static class BenchmarkState {
-		ICardinality hll1 = createHll(10_000);
-		ICardinality hll2 = createHll(10_000);
+		ICardinality hll1 = create${impl.className}(10_000);
+		ICardinality hll2 = create${impl.className}(10_000);
 	}
 
 	@State(Scope.Thread)
@@ -104,3 +109,4 @@ public class HllMergeMicro {
 		return benchState.hll1;
 	}
 }
+</#list>

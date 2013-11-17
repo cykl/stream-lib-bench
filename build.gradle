@@ -1,19 +1,27 @@
+buildscript {
+    repositories {
+        maven {
+            url "http://repo1.maven.org/maven2/"
+        }
+    }
+
+    dependencies {
+        classpath group: 'net.sourceforge.fmpp', name: 'fmpp', version: '0.9.14'
+    }
+
+    ant.taskdef(name: 'fmpp', classname:'fmpp.tools.AntTask', classpath: buildscript.configurations.classpath.asPath)
+}
+
 apply plugin: 'java'
 apply plugin: 'application'
-
-sourceCompatibility = 1.7
-
 
 group = 'unportant.streamlib'
 version = '0.0.1-SNASHOT'
 
+sourceCompatibility = 1.7
 mainClassName = 'org.openjdk.jmh.Main'
 
-
 repositories {
-    maven {
-        url "http://repo1.maven.org/maven2/"
-    }
     mavenLocal()
 }
 
@@ -22,9 +30,29 @@ dependencies {
     compile group: 'com.clearspring.analytics', name: 'stream', version: '2.6.0-SNAPSHOT'
 }
 
+// ----
+// Use FMPP and code generation when the same test should be run against
+// several implementations
+//
+def generatedSources = "${buildDir}/generated-src"
+
+task generateSources() << {
+    ant.fmpp(
+            configuration: "src/main/fmpp/config.fmpp",
+            sourceRoot:    "src/main/codegen",
+            outputRoot:    generatedSources
+    )
+}
+
+compileJava.dependsOn generateSources
+
+sourceSets.main.java {
+    srcDirs generatedSources, 'src/main/java'
+}
+
+// Use -Dargs to pass arguments to JMH
 run {
-    if ( project.hasProperty('args') ) {
+    if (project.hasProperty('args')) {
         args project.args.split('\\s+')
     }
 }
-
