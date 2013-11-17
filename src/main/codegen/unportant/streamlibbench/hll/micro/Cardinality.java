@@ -54,23 +54,13 @@ import com.clearspring.analytics.stream.cardinality.${impl.className};
 @Measurement(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
 public class ${impl.className}Cardinality {
 
-	${impl.className} hllEmpty  = create${impl.className}(0);
-	${impl.className} hllMedium = create${impl.className}(10_000);
-	${impl.className} hllLarge  = create${impl.className}(1_000_000);
+    <#list inputs.micro.cardinality as input>
+    ${impl.className} hll${input.size}  = create${impl.className}(${input.size});
 
-	@GenerateMicroBenchmark()
-	public long empty() throws CardinalityMergeException {
-		return hllEmpty.cardinality();
-	}
-
-	@GenerateMicroBenchmark()
-	public long medium() throws CardinalityMergeException {
-		return hllMedium.cardinality();
-	}
-
-	@GenerateMicroBenchmark()
-	public long large() throws CardinalityMergeException {
-		return hllLarge.cardinality();
-	}
+    @GenerateMicroBenchmark()
+    public long of_${input.size}() throws CardinalityMergeException {
+        return hll${input.size}.cardinality();
+    }
+    </#list>
 }
 </#list>

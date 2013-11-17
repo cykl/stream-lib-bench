@@ -56,39 +56,27 @@ import com.clearspring.analytics.stream.cardinality.ICardinality;
 @Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
 public class ${impl.className}Merge {
-	
-	@State(Scope.Benchmark)
-	public static class BenchmarkState {
-		ICardinality hll1 = create${impl.className}(10_000);
-		ICardinality hll2 = create${impl.className}(10_000);
-	}
 
 	@State(Scope.Thread)
 	public static class ThreadState {
 		Random rand = new Random();
 	}
-	
-	
+
+    <#foreach input in inputs.micro.merge>
+    <#assign s1 = input.size1>
+    <#assign s2 = input.size1>
+	@State(Scope.Benchmark)
+	public static class PureBenchmarkState${s1}_${s2} {
+		ICardinality hll1 = create${impl.className}(${s1});
+		ICardinality hll2 = create${impl.className}(${s2});
+	}
+
 	@GenerateMicroBenchmark
-	public ICardinality dumb(ThreadState threadState, BenchmarkState benchState) 
-			throws CardinalityMergeException {
+	public ICardinality of_${s1}_and_${s2}( ThreadState threadState, PureBenchmarkState${s1}_${s2} benchState)
+        throws CardinalityMergeException {
+
 		return benchState.hll1.merge(benchState.hll2);
 	}
-	
-	@GenerateMicroBenchmark()
-	public ICardinality evolving(ThreadState threadState, BenchmarkState benchState) 
-			throws CardinalityMergeException {
-		return evolving0(threadState, benchState);
-	}
-	
-	@CompilerControl(CompilerControl.Mode.INLINE)
-	private ICardinality evolving0(ThreadState threadState, BenchmarkState benchState) 
-			throws CardinalityMergeException {
-		benchState.hll1.offer(threadState.rand.nextLong());
-		benchState.hll2.offer(threadState.rand.nextLong());
-		
-		benchState.hll1 = benchState.hll1.merge(benchState.hll1);
-		return benchState.hll1;
-	}
+    </#foreach>
 }
 </#list>
