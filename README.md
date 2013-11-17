@@ -46,24 +46,18 @@ $ cd jmh/
 $ mvn clean install -DskipTests=true
 ~~~
 
-jmh is still fairly young and force use to write some ugly code or to violate
-the DRY principle. For example jmh does not yet support inheritence. We have to
-duplicate lot of code to compare to implementations while it could be very
-simple. We hope that jmh evolve quickly and addres theses issues.
-
-
 ### Build
 
 ~~~bash
-$ mvn clean install
+$ gradle compile
 ~~~
 
 ### Run
 
 ~~~bash
 # List available benchmarks
-$ java -jar target/microbenchmarks.jar -l ".*"
+$ gradle run -Pargs="-l"
 # Run the whole test suite
-$ java -jar target/microbenchmarks.jar ".*"
+$ gradle run
 ~~~~
 

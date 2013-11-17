@@ -1,0 +1,30 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.7
+
+
+group = 'unportant.streamlib'
+version = '0.0.1-SNASHOT'
+
+mainClassName = 'org.openjdk.jmh.Main'
+
+
+repositories {
+    maven {
+        url "http://repo1.maven.org/maven2/"
+    }
+    mavenLocal()
+}
+
+dependencies {
+    compile group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.0-SNAPSHOT'
+    compile group: 'com.clearspring.analytics', name: 'stream', version: '2.6.0-SNAPSHOT'
+}
+
+run {
+    if ( project.hasProperty('args') ) {
+        args project.args.split('\\s+')
+    }
+}
+
