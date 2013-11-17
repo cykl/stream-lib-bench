@@ -50,10 +50,6 @@ import com.clearspring.analytics.stream.cardinality.ICardinality;
  * in upstream (as for 2.4.0) so the resulting register set is obviously broken.
  * But the performance data can be used to compare an alternative thread safe 
  * implementation to the maximum achievable performance.
- * 
- * TODO: I'm not sure there is a real use case for concurrent merges
- * TODO: Perhaps remove scalability tests. A better test case with 
- * TODO: concurrent offers and merge would most likely be more relevant.
  */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
@@ -85,20 +81,6 @@ public class ${impl.className}Merge {
 		return evolving0(threadState, benchState);
 	}
 	
-	@Threads(4)
-	@GenerateMicroBenchmark
-	public ICardinality scalability4(ThreadState threadState, BenchmarkState benchState) 
-			throws CardinalityMergeException {
-		return evolving0(threadState, benchState);
-	}
-
-	@Threads(0)
-	@GenerateMicroBenchmark
-	public ICardinality scalabilityMax(ThreadState threadState, BenchmarkState benchState) 
-			throws CardinalityMergeException {
-		return evolving0(threadState, benchState);
-	}
-
 	@CompilerControl(CompilerControl.Mode.INLINE)
 	private ICardinality evolving0(ThreadState threadState, BenchmarkState benchState) 
 			throws CardinalityMergeException {

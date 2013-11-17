@@ -44,11 +44,6 @@ import com.clearspring.analytics.stream.cardinality.${impl.className};
  *
  * It does not expect to exhibit real world performances since data
  * will always be in the CPU cache.
- * 
- * We also check the scalability of the offer operation. It is not thread safe 
- * in upstream (as for 2.4.0) so the resulting register set is obviously broken.
- * But the performance data can be used to compare an alternative thread safe 
- * implementation to the maximum achievable performance.
  */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
@@ -76,18 +71,6 @@ public class ${impl.className}Offer {
 	
 	@GenerateMicroBenchmark()
 	public boolean simple(ThreadState threadState, BenchmarkState benchState) {
-		return benchState.hll.offer(threadState.rand.nextInt());
-	}
-
-	@Threads(4)
-	@GenerateMicroBenchmark()
-	public boolean scalability4(ThreadState threadState, BenchmarkState benchState) {
-		return benchState.hll.offer(threadState.rand.nextInt());
-	}
-	
-	@Threads(0)
-	@GenerateMicroBenchmark()
-	public boolean scalabilityMax(ThreadState threadState, BenchmarkState benchState) {
 		return benchState.hll.offer(threadState.rand.nextInt());
 	}
 }

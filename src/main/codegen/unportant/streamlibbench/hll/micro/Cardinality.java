@@ -46,8 +46,6 @@ import com.clearspring.analytics.stream.cardinality.${impl.className};
  *
  * Several cardinalities are tested to check if the number of elements
  * change the performance behavior and to be able to compare HLL to HLL++.
- *
- * We also check the scalability of the cardinality operation.
  */
 @BenchmarkMode(Mode.Throughput)
 @State(Scope.Benchmark)
@@ -72,18 +70,6 @@ public class ${impl.className}Cardinality {
 
 	@GenerateMicroBenchmark()
 	public long large() throws CardinalityMergeException {
-		return hllLarge.cardinality();
-	}
-
-	@Threads(4)
-	@GenerateMicroBenchmark()
-	public long scalability4() throws CardinalityMergeException {
-		return hllLarge.cardinality();
-	}
-
-	@Threads(0)
-	@GenerateMicroBenchmark()
-	public long scalabilityMax() throws CardinalityMergeException {
 		return hllLarge.cardinality();
 	}
 }
